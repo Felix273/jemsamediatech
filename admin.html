@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Admin — Jemsa Media Group</title>
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="admin-hero">
+      <div>
+        <p class="eyebrow">Jemsa CMS</p>
+        <h1>Website control room.</h1>
+        <p>Edit content, manage campaigns, upload media and publish changes through Supabase.</p>
+      </div>
+      <a class="site-link" href="index.html" target="_blank" rel="noopener">View site ↗</a>
+    </section>
+
+    <section class="panel" id="setupPanel">
+      <h2>Supabase setup required</h2>
+      <p>Open <code>cms-config.js</code>, set <code>enabled: true</code>, then add your Supabase project URL and anon key.</p>
+    </section>
+
+    <section class="panel auth-panel" id="authPanel" hidden>
+      <p class="eyebrow">Secure access</p>
+      <h2>Sign in to manage content.</h2>
+      <form id="loginForm">
+        <label>Email <input id="adminEmail" type="email" autocomplete="email" required></label>
+        <label>Password <input id="adminPassword" type="password" autocomplete="current-password" required></label>
+        <button type="submit">Sign in</button>
+      </form>
+      <p id="authStatus" role="status"></p>
+    </section>
+
+    <section class="dashboard" id="dashboard" hidden>
+      <aside class="admin-sidebar" aria-label="CMS sections">
+        <div class="sidebar-brand">
+          <p class="eyebrow">Dashboard</p>
+          <h2>Content</h2>
+        </div>
+        <nav class="section-nav" id="sectionNav"></nav>
+        <div class="sidebar-foot">
+          <button type="button" id="refreshBtn">Refresh content</button>
+          <button type="button" id="logoutBtn">Sign out</button>
+        </div>
+      </aside>
+
+      <div class="admin-workspace">
+        <div class="dashboard-top">
+          <div>
+            <p class="eyebrow" id="activeSectionId">Section</p>
+            <h2 id="activeSectionTitle">Editable content</h2>
+            <p id="activeSectionHelp">Choose a section to begin editing.</p>
+          </div>
+          <div class="publish-state" id="publishState">Connected to Supabase</div>
+        </div>
+
+        <div class="media-panel">
+          <div>
+            <h3>Media library</h3>
+            <p>Upload images to the <code>site-media</code> bucket, then paste the returned public URL into an image field.</p>
+          </div>
+          <form id="mediaForm">
+            <label>File <input id="mediaFile" type="file" accept="image/*,video/*,application/pdf"></label>
+            <label>Folder / filename <input id="mediaPath" placeholder="campaigns/my-image.webp" required></label>
+            <button type="submit">Upload</button>
+          </form>
+          <p id="mediaStatus" role="status"></p>
+        </div>
+
+        <div class="editor-grid" id="editorGrid"></div>
+      </div>
+    </section>
+  </main>
+  <script src="cms-defaults.js?v=3"></script>
+  <script src="cms-config.js?v=3"></script>
+  <script src="admin.js?v=5"></script>
+</body>
+</html>
