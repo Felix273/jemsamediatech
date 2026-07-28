@@ -101,3 +101,121 @@ textarea{min-height:560px;resize:vertical;font-family:ui-monospace,SFMono-Regula
   textarea{min-height:220px}
   .collection-toolbar{align-items:flex-start;flex-direction:column}
 }
+
+
+/* About story image upload dimensions */
+.form-field.image-field-with-guide{
+  grid-column:1 / -1;
+}
+
+.image-upload-guide{
+  margin-top:8px;
+  border:1px solid var(--line);
+  background:#faf9f6;
+  color:var(--ink);
+}
+
+.image-upload-guide__header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
+  padding:18px 20px;
+  border-bottom:1px solid var(--line);
+}
+
+.image-upload-guide__header strong{
+  display:block;
+  font-size:16px;
+  font-weight:600;
+}
+
+.image-upload-guide__header p{
+  margin:4px 0 0;
+  font-size:13px;
+  font-weight:400;
+}
+
+.image-upload-guide__header > span{
+  flex-shrink:0;
+  border:1px solid var(--purple);
+  color:var(--purple);
+  padding:6px 10px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+
+.image-upload-guide__grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+
+.image-upload-guide__grid > div{
+  min-width:0;
+  padding:16px 20px;
+  border-right:1px solid var(--line);
+}
+
+.image-upload-guide__grid > div:last-child{
+  border-right:0;
+}
+
+.image-upload-guide__grid small{
+  display:block;
+  margin-bottom:6px;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+}
+
+.image-upload-guide__grid strong{
+  display:block;
+  font-size:14px;
+  font-weight:600;
+  overflow-wrap:anywhere;
+}
+
+.image-upload-guide__note{
+  margin:0;
+  padding:14px 20px;
+  border-top:1px solid var(--line);
+  font-size:12px;
+  font-weight:400;
+}
+
+@media(max-width:900px){
+  .image-upload-guide__grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .image-upload-guide__grid > div:nth-child(2){
+    border-right:0;
+  }
+
+  .image-upload-guide__grid > div:nth-child(-n+2){
+    border-bottom:1px solid var(--line);
+  }
+}
+
+@media(max-width:600px){
+  .image-upload-guide__header{
+    flex-direction:column;
+  }
+
+  .image-upload-guide__grid{
+    grid-template-columns:1fr;
+  }
+
+  .image-upload-guide__grid > div{
+    border-right:0;
+    border-bottom:1px solid var(--line);
+  }
+
+  .image-upload-guide__grid > div:last-child{
+    border-bottom:0;
+  }
+}

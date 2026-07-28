@@ -225,6 +225,54 @@
     }else{
       wrapper.append(labelText,input);
     }
+
+    if(key==="storyImage"){
+      wrapper.classList.add("image-field-with-guide");
+
+      const guide=document.createElement("aside");
+      guide.className="image-upload-guide";
+
+      guide.innerHTML=`
+        <div class="image-upload-guide__header">
+          <div>
+            <strong>Image upload dimensions</strong>
+            <p>Follow these specifications for the best website display.</p>
+          </div>
+
+          <span>Portrait image</span>
+        </div>
+
+        <div class="image-upload-guide__grid">
+          <div>
+            <small>Image section</small>
+            <strong>About story image</strong>
+          </div>
+
+          <div>
+            <small>Recommended size</small>
+            <strong>900 × 1057 px</strong>
+          </div>
+
+          <div>
+            <small>Aspect ratio</small>
+            <strong>Approximately 6:7</strong>
+          </div>
+
+          <div>
+            <small>Suggested filename</small>
+            <strong>about-story.webp</strong>
+          </div>
+        </div>
+
+        <p class="image-upload-guide__note">
+          Upload an image using the recommended portrait dimensions to
+          prevent unwanted cropping, stretching or loss of quality.
+        </p>
+      `;
+
+      wrapper.appendChild(guide);
+    }
+
     return wrapper;
   }
 
