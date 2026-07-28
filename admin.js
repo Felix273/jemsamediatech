@@ -111,6 +111,7 @@
   const defaults=window.JEMSA_DEFAULT_CONTENT||{};
   const base=config.supabaseUrl?.replace(/\/$/,"");
   let session=JSON.parse(sessionStorage.getItem("jemsa_admin_session")||"null");
+  let refreshPromise=null;
   let activeId=sections[0][0];
 
   if(!config.enabled||!base||!config.anonKey){
@@ -119,19 +120,147 @@
   }
   setupPanel.hidden=true;
 
+  function saveSession(nextSession){
+    session=nextSession;
+
+    if(session?.expires_in&&!session.expires_at){
+      session.expires_at=
+        Math.floor(Date.now()/1000)+Number(session.expires_in);
+    }
+
+    sessionStorage.setItem(
+      "jemsa_admin_session",
+      JSON.stringify(session)
+    );
+  }
+
+  function clearSession(){
+    session=null;
+    sessionStorage.removeItem("jemsa_admin_session");
+  }
+
+  function returnToLogin(){
+    clearSession();
+    showLogin();
+    authStatus.textContent=
+      "Your session expired. Please sign in again.";
+  }
+
+  function sessionExpiresSoon(){
+    const expiresAt=Number(session?.expires_at||0);
+
+    return Boolean(
+      expiresAt&&
+      expiresAt<=Math.floor(Date.now()/1000)+60
+    );
+  }
+
+  async function refreshSession(){
+    if(!session?.refresh_token){
+      throw new Error(
+        "Your session has expired. Please sign in again."
+      );
+    }
+
+    if(refreshPromise)return refreshPromise;
+
+    refreshPromise=(async()=>{
+      const res=await fetch(
+        base+"/auth/v1/token?grant_type=refresh_token",
+        {
+          method:"POST",
+          headers:{
+            apikey:config.anonKey,
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            refresh_token:session.refresh_token
+          })
+        }
+      );
+
+      const text=await res.text();
+      let data={};
+
+      try{
+        data=text?JSON.parse(text):{};
+      }catch(error){
+        data={};
+      }
+
+      if(!res.ok){
+        throw new Error(
+          data.error_description||
+          data.msg||
+          text||
+          "Session refresh failed"
+        );
+      }
+
+      saveSession(data);
+      return data;
+    })();
+
+    try{
+      return await refreshPromise;
+    }finally{
+      refreshPromise=null;
+    }
+  }
+
+  async function ensureFreshSession(){
+    if(sessionExpiresSoon()){
+      await refreshSession();
+    }
+  }
+
   const authHeaders=()=>({
     apikey:config.anonKey,
     Authorization:"Bearer "+(session?.access_token||config.anonKey),
     "Content-Type":"application/json"
   });
 
-  async function request(path,options={}){
-    const res=await fetch(base+path,{...options,headers:{...authHeaders(),...(options.headers||{})}});
+  async function request(path,options={},allowRefresh=true){
+    try{
+      await ensureFreshSession();
+    }catch(error){
+      returnToLogin();
+      throw error;
+    }
+
+    const res=await fetch(
+      base+path,
+      {
+        ...options,
+        headers:{
+          ...authHeaders(),
+          ...(options.headers||{})
+        }
+      }
+    );
+
     const body=await res.text();
+
+    const expired=
+      res.status===401||
+      /JWT expired|PGRST303/i.test(body);
+
+    if(!res.ok&&allowRefresh&&expired){
+      try{
+        await refreshSession();
+        return request(path,options,false);
+      }catch(error){
+        returnToLogin();
+        throw error;
+      }
+    }
+
     if(!res.ok){
       throw new Error(body||res.statusText);
     }
+
     if(res.status===204||!body.trim())return null;
+
     try{
       return JSON.parse(body);
     }catch(error){
@@ -148,8 +277,7 @@
     const text=await res.text();
     const data=text?JSON.parse(text):{};
     if(!res.ok)throw new Error(data.error_description||data.msg||text||"Login failed");
-    session=data;
-    sessionStorage.setItem("jemsa_admin_session",JSON.stringify(session));
+    saveSession(data);
   }
 
   function showDashboard(){
@@ -384,8 +512,7 @@
   });
 
   document.getElementById("logoutBtn")?.addEventListener("click",()=>{
-    session=null;
-    sessionStorage.removeItem("jemsa_admin_session");
+    clearSession();
     showLogin();
   });
   document.getElementById("refreshBtn")?.addEventListener("click",loadContent);
@@ -397,6 +524,13 @@
     if(!file||!path)return;
     status.textContent="Uploading…";
     try{
+      try{
+        await ensureFreshSession();
+      }catch(error){
+        returnToLogin();
+        throw error;
+      }
+
       const bucket=config.mediaBucket||"site-media";
       const res=await fetch(`${base}/storage/v1/object/${bucket}/${encodeURIComponent(path).replace(/%2F/g,"/")}`,{
         method:"POST",
@@ -411,6 +545,19 @@
     }
   });
 
-  if(session?.access_token)showDashboard();
-  else showLogin();
+  async function initialiseAdmin(){
+    if(!session?.access_token){
+      showLogin();
+      return;
+    }
+
+    try{
+      await ensureFreshSession();
+      showDashboard();
+    }catch(error){
+      returnToLogin();
+    }
+  }
+
+  initialiseAdmin();
 })();
