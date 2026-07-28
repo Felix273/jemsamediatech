@@ -34,6 +34,7 @@
       ["heroKicker","Hero kicker","text"],
       ["heroTitle","Hero title","textarea"],
       ["heroBody","Hero body","textarea"],
+      ["heroImage","Hero background image path / URL","url"],
       ["introLabel","Intro label","text"],
       ["introTitle","Intro title","textarea"],
       ["introLead","Intro lead","textarea"],
@@ -401,13 +402,72 @@
       wrapper.appendChild(guide);
     }
 
+
+    // HOMEPAGE_HERO_IMAGE_GUIDE
+    if(key==="heroImage"){
+      wrapper.classList.add("image-field-with-guide");
+
+      const guide=document.createElement("aside");
+      guide.className="image-upload-guide";
+
+      guide.innerHTML=`
+        <div class="image-upload-guide__header">
+          <div>
+            <strong>Image upload dimensions</strong>
+            <p>Follow these specifications for the best homepage display.</p>
+          </div>
+
+          <span>Landscape image</span>
+        </div>
+
+        <div class="image-upload-guide__grid">
+          <div>
+            <small>Image section</small>
+            <strong>Homepage hero background</strong>
+          </div>
+
+          <div>
+            <small>Recommended size</small>
+            <strong>1800 × 1200 px</strong>
+          </div>
+
+          <div>
+            <small>Aspect ratio</small>
+            <strong>3:2 landscape</strong>
+          </div>
+
+          <div>
+            <small>Suggested filename</small>
+            <strong>homepage-hero.webp</strong>
+          </div>
+        </div>
+
+        <p class="image-upload-guide__note">
+          Use a wide, high-resolution image with clear space behind the
+          homepage headline. Keep important subjects near the centre.
+        </p>
+      `;
+
+      wrapper.appendChild(guide);
+    }
+
     return wrapper;
   }
 
   function renderObjectForm(container,schema,content){
     const form=document.createElement("div");
     form.className="field-grid";
-    schema.forEach(([key,label,type])=>form.appendChild(makeField(key,label,type,content?.[key])));
+    schema.forEach(([key,label,type])=>{
+      const homepageHeroFallback=
+        key==="heroImage"&&!content?.[key]
+          ? defaults.homepage?.heroImage
+          : content?.[key];
+
+      form.appendChild(
+        makeField(key,label,type,homepageHeroFallback)
+      );
+    });
+
     container.appendChild(form);
   }
 

@@ -28,6 +28,21 @@
     document.querySelectorAll(selector).forEach(img=>{img.src=src;if(alt!==undefined)img.alt=alt});
   };
 
+  const backgroundImage=(selector,src)=>{
+    if(!src)return;
+
+    const safeSource=String(src)
+      .replace(/\\/g,"\\\\")
+      .replace(/"/g,'\\"');
+
+    document.querySelectorAll(selector).forEach(element=>{
+      element.style.setProperty(
+        "--home-hero-image",
+        `url("${safeSource}")`
+      );
+    });
+  };
+
   const rowsToMap=rows=>rows.reduce((acc,row)=>{acc[row.id]=row.content||{};return acc},{});
 
   function applySiteSettings(data){
@@ -47,6 +62,7 @@
     text("[data-cms='home.heroKicker']",home.heroKicker);
     html("[data-cms='home.heroTitle']",home.heroTitle);
     text("[data-cms='home.heroBody']",home.heroBody);
+    backgroundImage(".home-hero",home.heroImage);
     text("[data-cms='home.introLabel']",home.introLabel);
     html("[data-cms='home.introTitle']",home.introTitle);
     text("[data-cms='home.introLead']",home.introLead);

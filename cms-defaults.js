@@ -11,6 +11,7 @@ window.JEMSA_DEFAULT_CONTENT = {
     heroKicker:"Pan-African · Marketing · Media · Technology",
     heroTitle:"Growth,\nmade visible.",
     heroBody:"We unite strategy, creativity, media and technology to turn brand attention into measurable business growth across Africa.",
+    heroImage:"assets/skyline_wide.webp",
     introLabel:"Who we are",
     introTitle:"One group.\nEvery point of influence.",
     introLead:"Jemsa Media Group brings together specialist teams in digital marketing, branding and out-of-home advertising to build connected brand experiences.",

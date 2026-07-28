@@ -56,8 +56,8 @@ button{cursor:pointer}
 [data-reveal].revealed{opacity:1;transform:none}
 
 /* home */
-.home-hero{min-height:100svh;background:var(--purple-dark);color:#fff;position:relative;display:flex;align-items:flex-end;overflow:hidden;padding:calc(var(--header) + 40px) 0 clamp(180px,23vh,270px)}
-.home-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(25,0,74,.9) 0%,rgba(56,8,128,.72) 48%,rgba(45,10,120,.1) 100%),url("assets/skyline_wide.webp") center/cover;transform:scale(1.04);animation:heroZoom 18s ease-in-out infinite alternate}
+.home-hero{--home-hero-image:url("assets/skyline_wide.webp");min-height:100svh;background:var(--purple-dark);color:#fff;position:relative;display:flex;align-items:flex-end;overflow:hidden;padding:calc(var(--header) + 40px) 0 clamp(180px,23vh,270px)}
+.home-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(25,0,74,.9) 0%,rgba(56,8,128,.72) 48%,rgba(45,10,120,.1) 100%),var(--home-hero-image) center/cover;transform:scale(1.04);animation:heroZoom 18s ease-in-out infinite alternate}
 .home-hero .shell{position:relative;z-index:1}
 .hero-kicker{margin-bottom:30px}
 .home-hero .display{max-width:11ch}
