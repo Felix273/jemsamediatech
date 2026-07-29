@@ -219,3 +219,95 @@ textarea{min-height:560px;resize:vertical;font-family:ui-monospace,SFMono-Regula
     border-bottom:0;
   }
 }
+
+
+/* Responsive media library layout */
+.media-panel{
+  display:grid;
+  grid-template-columns:minmax(260px,.85fr) minmax(520px,1.65fr);
+  gap:28px;
+  align-items:start;
+}
+
+.media-panel > div,
+.media-panel form{
+  min-width:0;
+}
+
+.media-panel #mediaForm{
+  display:grid;
+  grid-template-columns:
+    minmax(220px,1.15fr)
+    minmax(260px,1fr)
+    auto;
+  gap:14px;
+  align-items:end;
+  width:100%;
+  min-width:0;
+}
+
+#mediaForm label{
+  display:grid;
+  gap:8px;
+  min-width:0;
+  margin:0;
+}
+
+#mediaForm input{
+  width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+
+#mediaForm input[type="file"]{
+  height:50px;
+  padding:11px 12px;
+  overflow:hidden;
+  background:#fff;
+}
+
+#mediaForm input:not([type="file"]){
+  height:50px;
+  padding:0 14px;
+}
+
+#mediaForm button{
+  min-width:108px;
+  height:50px;
+  padding:0 20px;
+  white-space:nowrap;
+}
+
+#mediaStatus{
+  grid-column:1 / -1;
+  min-width:0;
+  margin:0;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+#mediaStatus code{
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-all;
+}
+
+@media(max-width:1100px){
+  .media-panel{
+    grid-template-columns:1fr;
+  }
+
+  .media-panel #mediaForm{
+    grid-template-columns:minmax(220px,1fr) minmax(240px,1fr) auto;
+  }
+}
+
+@media(max-width:760px){
+  .media-panel #mediaForm{
+    grid-template-columns:1fr;
+  }
+
+  #mediaForm button{
+    width:100%;
+  }
+}
