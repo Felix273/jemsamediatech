@@ -127,12 +127,38 @@ document.getElementById("copyBriefBtn")?.addEventListener("click",async()=>{
   const brief=buildBriefText();
   if(!brief)return;
   const status=document.getElementById("formStatus");
+  let success=false;
   try{
-    await navigator.clipboard.writeText(brief.body);
-    if(status)status.textContent="✓ Brief copied to clipboard! You can paste it into any email application.";
+    if(navigator.clipboard&&window.isSecureContext){
+      await navigator.clipboard.writeText(brief.body);
+      success=true;
+    }
   }catch(err){
-    if(status)status.textContent="Could not copy automatically. Your email application will open instead.";
-    window.location.href=`mailto:info@jemsamediatech.africa?subject=${encodeURIComponent(brief.subject)}&body=${encodeURIComponent(brief.body)}`;
+    success=false;
+  }
+
+  if(!success){
+    try{
+      const textArea=document.createElement("textarea");
+      textArea.value=brief.body;
+      textArea.style.position="fixed";
+      textArea.style.left="-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      success=document.execCommand("copy");
+      document.body.removeChild(textArea);
+    }catch(e){
+      success=false;
+    }
+  }
+
+  if(status){
+    if(success){
+      status.textContent="✓ Brief copied to clipboard! You can paste it into your email app.";
+    }else{
+      status.textContent="Please select and copy the text manually from the brief field.";
+    }
   }
 });
 
