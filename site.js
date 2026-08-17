@@ -91,12 +91,12 @@ document.querySelectorAll("[data-motion-control]").forEach(button=>{
 });
 
 const enquiryForm=document.getElementById("enquiryForm");
-enquiryForm?.addEventListener("submit",event=>{
-  event.preventDefault();
-  if(!enquiryForm.reportValidity())return;
+function buildBriefText(){
+  if(!enquiryForm)return null;
   const data=new FormData(enquiryForm);
   const subject=`New project enquiry — ${data.get("company")||data.get("name")}`;
   const body=[
+    `Subject: ${subject}`,
     `Name: ${data.get("name")}`,
     `Company: ${data.get("company")}`,
     `Email: ${data.get("email")}`,
@@ -108,9 +108,32 @@ enquiryForm?.addEventListener("submit",event=>{
     "Project brief:",
     data.get("brief")
   ].join("\n");
+  return {subject, body};
+}
+
+enquiryForm?.addEventListener("submit",event=>{
+  event.preventDefault();
+  if(!enquiryForm.reportValidity())return;
+  const brief=buildBriefText();
+  if(!brief)return;
   const status=document.getElementById("formStatus");
   if(status)status.textContent="Your email app is opening with the project details prepared.";
-  window.location.href=`mailto:info@jemsamediatech.africa?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href=`mailto:info@jemsamediatech.africa?subject=${encodeURIComponent(brief.subject)}&body=${encodeURIComponent(brief.body)}`;
+});
+
+document.getElementById("copyBriefBtn")?.addEventListener("click",async()=>{
+  if(!enquiryForm)return;
+  if(!enquiryForm.reportValidity())return;
+  const brief=buildBriefText();
+  if(!brief)return;
+  const status=document.getElementById("formStatus");
+  try{
+    await navigator.clipboard.writeText(brief.body);
+    if(status)status.textContent="✓ Brief copied to clipboard! You can paste it into any email application.";
+  }catch(err){
+    if(status)status.textContent="Could not copy automatically. Your email application will open instead.";
+    window.location.href=`mailto:info@jemsamediatech.africa?subject=${encodeURIComponent(brief.subject)}&body=${encodeURIComponent(brief.body)}`;
+  }
 });
 
 if(!document.querySelector(".floating-contact")){

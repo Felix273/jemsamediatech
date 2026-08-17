@@ -33,7 +33,10 @@
         <div class="form-field full"><label for="timeline">Desired timeline *</label><input id="timeline" name="timeline" placeholder="For example: launch in September 2026" required></div>
         <div class="form-field full"><label for="brief">Tell us about the project *</label><textarea id="brief" name="brief" minlength="30" required></textarea></div>
         <label class="consent"><input type="checkbox" required> <span>I agree that Jemsa Media Group may use these details to respond to my enquiry. See the <a href="privacy.html"><u>Privacy Policy</u></a>.</span></label>
-        <button class="form-submit" type="submit">Prepare enquiry email ↗</button>
+        <div class="form-actions" style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="form-submit" type="submit">Prepare enquiry email ↗</button>
+          <button class="form-submit secondary-btn" type="button" id="copyBriefBtn" style="background:transparent;border:1px solid currentColor;color:inherit;cursor:pointer">Copy brief to clipboard 📋</button>
+        </div>
         <p class="form-note">No form data is stored by this website. You will review the message in your email application before sending.</p>
         <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
       </form>
@@ -42,8 +45,8 @@
   <section class="shell section-sm"><div class="map-block"><p>Pan-African perspective. Nairobi energy.</p></div></section>
 </main>
 <footer><div class="shell"><div class="footer-grid"><div class="footer-brand"><img src="assets/logo.png" alt="Jemsa Media Group"><p data-cms="footer.brandLine">Pan-African marketing, media and technology built for ambitious brands.</p></div><div class="footer-col"><h3>Company</h3><a href="about.html">About</a><a href="subsidiaries.html">Subsidiaries</a><a href="work.html">Work</a><a href="contact.html">Contact</a></div><div class="footer-col"><h3>Subsidiaries</h3><a href="subsidiaries.html#digital">Jemsa Digital</a><a href="subsidiaries.html#ooh">Jemsa OOH</a><a href="subsidiaries.html#branding">Jemsa Branding</a></div><div class="footer-col"><h3>Connect</h3><a data-cms="contact.phone" href="tel:+254740953042">+254 740 953 042</a><a data-cms="contact.whatsapp" href="https://wa.me/254740953042">WhatsApp</a><a data-cms="contact.email" href="mailto:info@jemsamediatech.africa">Email us</a><span data-cms="contact.location">Nairobi, Kenya</span></div></div><div class="footer-bottom"><span>© 2026 Jemsa Media Group</span><span data-cms="footer.tagline">Growth, made visible.</span></div></div></footer>
-<script src="cms-defaults.js?v=3"></script>
+<script src="cms-defaults.js?v=4"></script>
 <script src="cms-config.js?v=3"></script>
-<script src="cms.js?v=3"></script>
+<script src="cms.js?v=4"></script>
 <script src="site.js"></script>
 </body></html>

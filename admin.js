@@ -78,7 +78,7 @@
   const collectionSchemas={
     campaigns:{
       singular:"Campaign",
-      empty:{id:"",title:"",client:"",category:"",image:"",alt:"",featured:false,wide:false},
+      empty:{id:"",title:"",client:"",category:"",image:"",alt:"",featured:false,wide:false,channels:"",summary:"",brief:"",insight:"",thinking:"",ideaTitle:"",idea:"",execution:"",results:"",next:""},
       fields:[
         ["id","Campaign ID / URL slug","text"],
         ["title","Campaign title","text"],
@@ -87,7 +87,17 @@
         ["image","Image path / URL","url"],
         ["alt","Image alt text","text"],
         ["featured","Show on homepage","checkbox"],
-        ["wide","Wide homepage layout","checkbox"]
+        ["wide","Wide homepage layout","checkbox"],
+        ["channels","Channels","text"],
+        ["summary","Summary","textarea"],
+        ["brief","Brief / Challenge","textarea"],
+        ["insight","Audience insight","textarea"],
+        ["thinking","Strategic thinking","textarea"],
+        ["ideaTitle","Idea headline","text"],
+        ["idea","Creative idea","textarea"],
+        ["execution","Execution","textarea"],
+        ["results","Results","textarea"],
+        ["next","Next project ID","text"]
       ]
     },
     partners:{
