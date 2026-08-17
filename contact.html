@@ -33,7 +33,10 @@
         <div class="form-field full"><label for="timeline">Desired timeline *</label><input id="timeline" name="timeline" placeholder="For example: launch in September 2026" required></div>
         <div class="form-field full"><label for="brief">Tell us about the project *</label><textarea id="brief" name="brief" minlength="30" required></textarea></div>
         <label class="consent"><input type="checkbox" required> <span>I agree that Jemsa Media Group may use these details to respond to my enquiry. See the <a href="privacy.html"><u>Privacy Policy</u></a>.</span></label>
-        <button class="form-submit" type="submit">Prepare enquiry email ↗</button>
+        <div class="form-actions" style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="form-submit" type="submit">Prepare enquiry email ↗</button>
+          <button class="form-submit secondary-btn" type="button" id="copyBriefBtn" style="background:transparent;border:1px solid currentColor;color:inherit;cursor:pointer">Copy brief to clipboard 📋</button>
+        </div>
         <p class="form-note">No form data is stored by this website. You will review the message in your email application before sending.</p>
         <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
       </form>

@@ -57,6 +57,12 @@
     }
   }
 
+  function renderPartners(selector,items){
+    const target=document.querySelector(selector);
+    if(!target||!Array.isArray(items)||!items.length)return;
+    target.innerHTML=items.map(item=>`<div class="partner-card">${item.logo?`<img src="${item.logo}" alt="${item.name||''}">`:''}<span>${item.name||''}</span></div>`).join("");
+  }
+
   function applyHome(data){
     const home=data.homepage||{};
     text("[data-cms='home.heroKicker']",home.heroKicker);
@@ -76,6 +82,7 @@
     text("[data-cms='home.ctaTitle']",home.ctaTitle);
     text("[data-cms='home.ctaBody']",home.ctaBody);
     renderProjects(".editorial-work",(data.campaigns||[]).filter(item=>item.featured).slice(0,4),true);
+    renderPartners(".partner-grid", (data.partners && data.partners.length) ? data.partners : (window.JEMSA_DEFAULT_CONTENT?.partners || []));
   }
 
   function applyAbout(data){
