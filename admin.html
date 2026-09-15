@@ -4,79 +4,141 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Admin — Jemsa Media Group</title>
+  <title>Admin Control Center — Jemsa Media Group</title>
   <link rel="icon" href="assets/favicon.png">
-  <link rel="stylesheet" href="admin.css?v=4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css?v=10">
 </head>
 <body>
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
   <main class="admin-shell">
-    <section class="admin-hero">
-      <div>
-        <p class="eyebrow">Jemsa CMS</p>
-        <h1>Website control room.</h1>
-        <p>Edit content, manage campaigns, upload media and publish changes through Supabase.</p>
+    <!-- Top Bar Header -->
+    <header class="admin-topbar">
+      <div class="brand-group">
+        <a href="index.html" target="_blank" rel="noopener" class="brand-logo-link" title="Open live website in new tab">
+          <img src="assets/logo.png" alt="Jemsa Media Group" class="admin-logo">
+        </a>
+        <span class="badge-cms">CMS Control Center</span>
       </div>
-      <a class="site-link" href="index.html" target="_blank" rel="noopener">View site ↗</a>
+      <div class="topbar-actions">
+        <span id="supabaseStatusBadge" class="status-badge offline">Checking connection...</span>
+        <a class="btn btn-outline" href="index.html" target="_blank" rel="noopener">View Live Site ↗</a>
+      </div>
+    </header>
+
+    <!-- Supabase Configuration Warning Panel (if disabled) -->
+    <section class="panel setup-panel" id="setupPanel" hidden>
+      <div class="panel-header">
+        <div class="status-icon warning">⚡</div>
+        <div>
+          <h2>Supabase Integration Pending</h2>
+          <p>Your CMS is currently using local default data. To connect to live cloud storage, open <code>cms-config.js</code>, set <code>enabled: true</code>, and provide your Supabase URL and anon key.</p>
+        </div>
+      </div>
+      <div class="panel-body">
+        <button type="button" class="btn btn-primary" id="continueLocalBtn">Continue in Demo/Local Mode</button>
+      </div>
     </section>
 
-    <section class="panel" id="setupPanel">
-      <h2>Supabase setup required</h2>
-      <p>Open <code>cms-config.js</code>, set <code>enabled: true</code>, then add your Supabase project URL and anon key.</p>
-    </section>
-
+    <!-- Auth Panel -->
     <section class="panel auth-panel" id="authPanel" hidden>
-      <p class="eyebrow">Secure access</p>
-      <h2>Sign in to manage content.</h2>
-      <form id="loginForm">
-        <label>Email <input id="adminEmail" type="email" autocomplete="email" required></label>
-        <label>Password <input id="adminPassword" type="password" autocomplete="current-password" required></label>
-        <button type="submit">Sign in</button>
-      </form>
-      <p id="authStatus" role="status"></p>
+      <div class="auth-box">
+        <div class="auth-header">
+          <span class="eyebrow">Secure Management</span>
+          <h2>Sign in to Jemsa CMS</h2>
+          <p>Access website control room to publish updates across all brand touchpoints.</p>
+        </div>
+        <form id="loginForm" class="auth-form">
+          <label class="form-label">
+            <span>Email Address</span>
+            <input id="adminEmail" type="email" placeholder="admin@jemsamediatech.africa" autocomplete="email" required>
+          </label>
+          <label class="form-label">
+            <span>Password</span>
+            <input id="adminPassword" type="password" placeholder="••••••••••••" autocomplete="current-password" required>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Sign in to Control Room</button>
+        </form>
+        <div class="auth-demo-opt">
+          <button type="button" class="btn-text" id="demoLoginBtn">⚡ Enterprise Demo Access (Bypass Login)</button>
+        </div>
+        <p id="authStatus" class="form-status" role="status"></p>
+      </div>
     </section>
 
+    <!-- Dashboard Main View -->
     <section class="dashboard" id="dashboard" hidden>
+      <!-- Sidebar Navigation -->
       <aside class="admin-sidebar" aria-label="CMS sections">
-        <div class="sidebar-brand">
-          <p class="eyebrow">Dashboard</p>
-          <h2>Content</h2>
+        <div class="sidebar-header">
+          <span class="eyebrow">Sections</span>
+          <h3>Website Content</h3>
         </div>
         <nav class="section-nav" id="sectionNav"></nav>
-        <div class="sidebar-foot">
-          <button type="button" id="refreshBtn">Refresh content</button>
-          <button type="button" id="logoutBtn">Sign out</button>
+        <div class="sidebar-footer">
+          <button type="button" class="btn btn-ghost" id="refreshBtn">🔄 Refresh Data</button>
+          <button type="button" class="btn btn-ghost text-danger" id="logoutBtn">Sign Out</button>
         </div>
       </aside>
 
+      <!-- Main Workspace Editor Pane -->
       <div class="admin-workspace">
-        <div class="dashboard-top">
-          <div>
-            <p class="eyebrow" id="activeSectionId">Section</p>
-            <h2 id="activeSectionTitle">Editable content</h2>
+        <header class="workspace-header">
+          <div class="workspace-titles">
+            <span class="eyebrow" id="activeSectionId">SECTION</span>
+            <h2 id="activeSectionTitle">Editable Content</h2>
             <p id="activeSectionHelp">Choose a section to begin editing.</p>
           </div>
-          <div class="publish-state" id="publishState">Connected to Supabase</div>
-        </div>
-
-        <div class="media-panel">
-          <div>
-            <h3>Media library</h3>
-            <p>Upload images to the <code>site-media</code> bucket, then paste the returned public URL into an image field.</p>
+          <div class="workspace-sticky-actions">
+            <button type="button" class="btn btn-secondary" id="resetCurrentBtn">Reset Defaults</button>
+            <button type="button" class="btn btn-primary" id="saveCurrentBtn">Save Changes</button>
           </div>
-          <form id="mediaForm">
-            <label>File <input id="mediaFile" type="file" accept="image/*,video/*,application/pdf"></label>
-            <label>Folder / filename <input id="mediaPath" placeholder="campaigns/my-image.webp" required></label>
-            <button type="submit">Upload</button>
-          </form>
-          <p id="mediaStatus" role="status"></p>
-        </div>
+        </header>
 
-        <div class="editor-grid" id="editorGrid"></div>
+        <!-- Media Library Panel (Always accessible in Media tab or inline) -->
+        <section class="media-library-panel panel" id="mediaLibraryPanel" hidden>
+          <div class="media-header">
+            <div>
+              <h3>Global Media Library</h3>
+              <p>Upload images or assets directly to cloud bucket <code>site-media</code>. Links can be attached directly to any image field.</p>
+            </div>
+          </div>
+          <form id="mediaForm" class="media-upload-grid">
+            <label class="form-label">
+              <span>Choose Asset File</span>
+              <input id="mediaFile" type="file" accept="image/*,video/*,application/pdf" required>
+            </label>
+            <label class="form-label">
+              <span>Destination Path / Filename</span>
+              <input id="mediaPath" placeholder="campaigns/hero-banner.webp" required>
+            </label>
+            <button type="submit" class="btn btn-primary" id="mediaUploadBtn">Upload Asset</button>
+          </form>
+          <p id="mediaStatus" class="form-status" role="status"></p>
+
+          <div class="uploaded-recent-list" id="recentUploadsList">
+            <h4>Recently Uploaded Assets</h4>
+            <div id="recentUploadsGrid" class="recent-uploads-grid">
+              <p class="empty-hint">No uploads in this session yet.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dynamic Editors Grid (Single Pane Display) -->
+        <div class="editor-workspace-container" id="editorGrid"></div>
       </div>
     </section>
   </main>
+
+  <!-- Global Hidden File Input for Inline Field Uploads -->
+  <input type="file" id="globalInlineFileInput" accept="image/*,video/*" style="display:none;">
+
   <script src="cms-defaults.js?v=4"></script>
   <script src="cms-config.js?v=3"></script>
-  <script src="admin.js?v=8"></script>
+  <script src="admin.js?v=10"></script>
 </body>
 </html>
